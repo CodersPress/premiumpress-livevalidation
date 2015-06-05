@@ -1,0 +1,100 @@
+<?php
+/*
+Plugin Name: livevalidation
+Plugin URI: http://coderspress.com/
+Description: livevalidation
+Version: 2015.0605
+Updated: 5th June 2015
+Author: sMarty 
+Author URI: http://coderspress.com
+WP_Requires: 3.8.1
+WP_Compatible: 4.2.2
+License: http://creativecommons.org/licenses/GPL/2.0
+*/
+
+add_action( 'init', 'lv_plugin_updater' );
+function lv_plugin_updater() {
+	if ( is_admin() ) { 
+	include_once( dirname( __FILE__ ) . '/updater.php' );
+		$config = array(
+			'slug' => plugin_basename( __FILE__ ),
+			'proper_folder_name' => 'premiumpress-livevalidation',
+			'api_url' => 'https://api.github.com/repos/CodersPress/premiumpress-livevalidation',
+			'raw_url' => 'https://raw.github.com/CodersPress/premiumpress-livevalidation/master',
+			'github_url' => 'https://github.com/CodersPress/premiumpress-livevalidation',
+			'zip_url' => 'https://github.com/CodersPress/premiumpress-livevalidation/zipball/master',
+			'sslverify' => true,
+			'access_token' => '892b781c2b6d6af20794f8c2f2308ac23b03f33f',
+		);
+		new WP_LV_UPDATER( $config );
+	}
+}
+
+function livevalidation_menu() {
+	add_menu_page('Live Validation', 'Live Validation', 'administrator', __FILE__, 'livevalidation_settings_page',plugins_url('/images/text_letter_t.png', __FILE__));
+	add_action( 'admin_init', 'livevalidation_settings' );
+}
+add_action('admin_menu', 'livevalidation_menu');
+
+function livevalidation_settings() {
+	register_setting( 'livevalidation-group', '' );
+}
+function livevalidation_defaults()
+{
+    $option = array(
+        'title_on_invoice_text_length' => '35',
+    );
+    foreach ( $option as $key => $value )
+    {
+       if (get_option($key) == NULL) {
+        update_option($key, $value);
+       }
+    }
+    return;
+}
+register_activation_hook(__FILE__, 'livevalidation_defaults');
+function livevalidation_settings_page() {
+if ($_REQUEST['settings-updated']=='true') {
+echo '<div id="message" class="updated fade"><p><strong>Plugin setting saved.</strong></p></div>';
+}
+?>
+<div class="wrap">
+    <h2>Live Validation.</h2>
+    <hr />
+<form method="post" action="options.php">
+    <?php settings_fields("livevalidation-group");?>
+    <?php do_settings_sections("livevalidation-group");?>
+    <table class="widefat" style="width:800px;">
+        <thead style="background:#2EA2CC;color:#fff;">
+            <tr>
+                <th style="color:#fff;"></th>
+                <th style="color:#fff;"></th>
+                <th style="color:#fff;"></th>
+            </tr>
+        </thead>
+<tr>
+<td></td>
+<td> </td>
+<td>
+<input type="text" size="10" id="" name="" value="<?php echo get_option("");?>"/>
+</td>
+        </tr>
+  </table>
+    <?php submit_button(); ?>
+</form>
+</div>
+<?php
+} 
+
+
+
+
+function pp_livevalidation() {	global $CORE;?>
+<script>
+
+</script>
+<?php }
+
+add_action('wp_footer', 'pp_livevalidation');
+
+?>
