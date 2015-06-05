@@ -31,7 +31,7 @@ function lv_plugin_updater() {
 }
 
 function livevalidation_menu() {
-	add_menu_page('Live Validation', 'Live Validation', 'administrator', __FILE__, 'livevalidation_settings_page',plugins_url('/images/text_letter_t.png', __FILE__));
+	add_menu_page('PP Live Validation', 'PP Live Validation', 'administrator', __FILE__, 'livevalidation_settings_page',plugins_url('/images/j.png', __FILE__));
 	add_action( 'admin_init', 'livevalidation_settings' );
 }
 add_action('admin_menu', 'livevalidation_menu');
@@ -42,7 +42,7 @@ function livevalidation_settings() {
 function livevalidation_defaults()
 {
     $option = array(
-        'title_on_invoice_text_length' => '35',
+        '' => '',
     );
     foreach ( $option as $key => $value )
     {
@@ -52,7 +52,7 @@ function livevalidation_defaults()
     }
     return;
 }
-register_activation_hook(__FILE__, 'livevalidation_defaults');
+//register_activation_hook(__FILE__, 'livevalidation_defaults');
 function livevalidation_settings_page() {
 if ($_REQUEST['settings-updated']=='true') {
 echo '<div id="message" class="updated fade"><p><strong>Plugin setting saved.</strong></p></div>';
@@ -86,7 +86,12 @@ echo '<div id="message" class="updated fade"><p><strong>Plugin setting saved.</s
 <?php
 } 
 
-
+function jquery_livevalidation_js()
+{
+    wp_register_script( 'livevalidation-script', plugins_url( '/js/livevalidation_standalone.compressed.js', __FILE__ ) );
+    wp_enqueue_script( 'livevalidation-script' );
+}
+add_action( 'wp_enqueue_scripts', 'jquery_livevalidation_js' );
 
 
 function pp_livevalidation() {	global $CORE;?>
