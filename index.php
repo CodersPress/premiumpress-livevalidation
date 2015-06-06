@@ -1,8 +1,8 @@
 <?php
 /*
-Plugin Name: livevalidation
+Plugin Name: Premiumpress live validation
 Plugin URI: http://coderspress.com/
-Description: livevalidation
+Description: Premiumpress live form validation as you type
 Version: 2015.0605
 Updated: 5th June 2015
 Author: sMarty 
@@ -37,12 +37,36 @@ function livevalidation_menu() {
 add_action('admin_menu', 'livevalidation_menu');
 
 function livevalidation_settings() {
-	register_setting( 'livevalidation-group', '' );
+	register_setting( 'livevalidation-group', 'user_login_text_length' );
+	register_setting( 'livevalidation-group', 'user_login_error_message' );
+	register_setting( 'livevalidation-group', 'user_login_active' );
+	register_setting( 'livevalidation-group', 'user_email_text_length' );
+	register_setting( 'livevalidation-group', 'user_email_error_message' );
+	register_setting( 'livevalidation-group', 'user_email_active' );
+	register_setting( 'livevalidation-group', 'pass1_text_length' );
+	register_setting( 'livevalidation-group', 'pass1_error_message' );
+	register_setting( 'livevalidation-group', 'pass1_active' );
+	register_setting( 'livevalidation-group', 'pass2_error_message' );
+	register_setting( 'livevalidation-group', 'pass2_active' );
+	register_setting( 'livevalidation-group', 'reg_val_error_message' );
+	register_setting( 'livevalidation-group', 'reg_val_active' );
 }
 function livevalidation_defaults()
 {
     $option = array(
-        '' => '',
+        'user_login_text_length' => '2',
+        'user_login_error_message' => "Please enter 2 or more characters!",
+        'user_login_active' => 'no',
+        'user_email_text_length' => '6',
+        'user_email_error_message' => "Please enter a valid email address!",
+        'user_email_active' => 'no',
+        'pass1_text_length' => '5',
+        'pass1_error_message' => "Please enter 5 or more characters!",
+        'pass1_active' => 'no',
+        'pass2_error_message' => "Passwords do not match!",
+        'pass2_active' => 'no',
+        'reg_val_error_message' => "Incorrect, numbers only!",
+        'reg_val_active' => 'no',
     );
     foreach ( $option as $key => $value )
     {
@@ -52,10 +76,10 @@ function livevalidation_defaults()
     }
     return;
 }
-//register_activation_hook(__FILE__, 'livevalidation_defaults');
+register_activation_hook(__FILE__, 'livevalidation_defaults');
 function livevalidation_settings_page() {
 if ($_REQUEST['settings-updated']=='true') {
-echo '<div id="message" class="updated fade"><p><strong>Plugin setting saved.</strong></p></div>';
+echo '<div id="message" class="updated fade"><p><strong>Plugin settings saved.</strong></p></div>';
 }
 ?>
 <div class="wrap">
@@ -66,21 +90,95 @@ echo '<div id="message" class="updated fade"><p><strong>Plugin setting saved.</s
     <?php do_settings_sections("livevalidation-group");?>
     <table class="widefat" style="width:800px;">
 
-    <h3>Section Registration:</h3>
+    <h3>Section Registration and Login:</h3>
 
         <thead style="background:#2EA2CC;color:#fff;">
             <tr>
-                <th style="color:#fff;">Username text length</th>
-                <th style="color:#fff;">Valid</th>
-                <th style="color:#fff;">Error</th>
-                <th style="color:#fff;">Active</th>
+                <th style="color:#fff;">Username length</th>
+                <th style="color:#fff;">Error message</th>
+                <th style="color:#fff;">Active validation</th>
             </tr>
         </thead>
 <tr>
-<td><input type="text" size="10" id="" name="" value="<?php echo get_option("");?>"/></td>
-<td><input type="text" size="10" id="" name="" value="<?php echo get_option("");?>"/></td>
-<td><input type="text" size="10" id="" name="" value="<?php echo get_option("");?>"/></td>
-<td><input type="text" size="10" id="" name="" value="<?php echo get_option("");?>"/></td>
+<td><input type="text" size="1" id="user_login_text_length" name="user_login_text_length" value="<?php echo get_option("user_login_text_length");?>"/></td>
+<td><input type="text" size="70" id="user_login_error_message" name="user_login_error_message" value="<?php echo get_option("user_login_error_message");?>"/></td>
+<td>
+        <select name="user_login_active" />
+        <option value="yes" <?php if ( get_option('user_login_active') == 'yes' ) echo 'selected="selected"'; ?>>Yes</option>
+        <option value="no" <?php if ( get_option('user_login_active') == 'no' ) echo 'selected="selected"'; ?>>No</option>
+         </select>
+</td>
+<tr>
+        <thead style="background:#2EA2CC;color:#fff;">
+            <tr>
+                <th style="color:#fff;">Email length</th>
+                <th style="color:#fff;">Error message</th>
+                <th style="color:#fff;">Active validation</th>
+            </tr>
+        </thead>
+<tr>
+<td><input type="text" size="1" id="user_email_text_length" name="user_email_text_length" value="<?php echo get_option("user_email_text_length");?>"/></td>
+<td><input type="text" size="70" id="user_email_error_message" name="user_email_error_message" value="<?php echo get_option("user_email_error_message");?>"/></td>
+<td>
+        <select name="user_email_active" />
+        <option value="yes" <?php if ( get_option('user_email_active') == 'yes' ) echo 'selected="selected"'; ?>>Yes</option>
+        <option value="no" <?php if ( get_option('user_email_active') == 'no' ) echo 'selected="selected"'; ?>>No</option>
+         </select>
+</td>
+        </tr>
+<tr>
+        <thead style="background:#2EA2CC;color:#fff;">
+            <tr>
+                <th style="color:#fff;">Password length</th>
+                <th style="color:#fff;">Error message</th>
+                <th style="color:#fff;">Active validation</th>
+            </tr>
+        </thead>
+<tr>
+<td><input type="text" size="1" id="pass1_text_length" name="pass1_text_length" value="<?php echo get_option("pass1_text_length");?>"/></td>
+<td><input type="text" size="70" id="pass1_error_message" name="pass1_error_message" value="<?php echo get_option("pass1_error_message");?>"/></td>
+<td>
+        <select name="pass1_active" />
+        <option value="yes" <?php if ( get_option('pass1_active') == 'yes' ) echo 'selected="selected"'; ?>>Yes</option>
+        <option value="no" <?php if ( get_option('pass1_active') == 'no' ) echo 'selected="selected"'; ?>>No</option>
+         </select>
+</td>
+        </tr>
+<tr>
+        <thead style="background:#2EA2CC;color:#fff;">
+            <tr>
+                <th style="color:#fff;">Password confirm</th>
+                <th style="color:#fff;">Error message</th>
+                <th style="color:#fff;">Active validation</th>
+            </tr>
+        </thead>
+<tr>
+<td>Password Compare:</td>
+<td><input type="text" size="70" id="pass2_error_message" name="pass2_error_message" value="<?php echo get_option("pass2_error_message");?>"/></td>
+<td>
+        <select name="pass2_active" />
+        <option value="yes" <?php if ( get_option('pass2_active') == 'yes' ) echo 'selected="selected"'; ?>>Yes</option>
+        <option value="no" <?php if ( get_option('pass2_active') == 'no' ) echo 'selected="selected"'; ?>>No</option>
+         </select>
+</td>
+        </tr>
+<tr>
+        <thead style="background:#2EA2CC;color:#fff;">
+            <tr>
+                <th style="color:#fff;">Security</th>
+                <th style="color:#fff;">Error message</th>
+                <th style="color:#fff;">Active validation</th>
+            </tr>
+        </thead>
+<tr>
+<td>Security Question:</td>
+<td><input type="text" size="70" id="reg_val_error_message" name="reg_val_error_message" value="<?php echo get_option("reg_val_error_message");?>"/></td>
+<td>
+        <select name="reg_val_active" />
+        <option value="yes" <?php if ( get_option('reg_val_active') == 'yes' ) echo 'selected="selected"'; ?>>Yes</option>
+        <option value="no" <?php if ( get_option('reg_val_active') == 'no' ) echo 'selected="selected"'; ?>>No</option>
+         </select>
+</td>
         </tr>
   </table>
     <?php submit_button(); ?>
@@ -91,7 +189,7 @@ echo '<div id="message" class="updated fade"><p><strong>Plugin setting saved.</s
 
 function jquery_livevalidation_js()
 {
-    wp_register_script( 'livevalidation-script', plugins_url( '/js/livevalidation_standalone.compressed.js', __FILE__ ) );
+    wp_register_script( 'livevalidation-script', plugins_url( '/js/livevalidation_standalone.js', __FILE__ ) );
     wp_enqueue_script( 'livevalidation-script' );
 }
 add_action( 'wp_enqueue_scripts', 'jquery_livevalidation_js' );
@@ -105,8 +203,36 @@ add_action( 'wp_enqueue_scripts', 'livevalidation_styles' );
 
 function pp_livevalidation() {	?>
 <script>
-var user_login = new LiveValidation('user_login', { validMessage: " ", onlyOnBlur: true } );
-user_login.add( Validate.Length, { wrongLengthMessage: "Do", is: 4 } );
+var user_login_active = "<?php echo get_option("user_login_active");?>";
+if( user_login_active == 'yes' && jQuery('#user_login').length) {
+var lv_user_login = new LiveValidation('user_login', { onlyOnBlur: true } );
+lv_user_login.add( Validate.Length, { tooShortMessage: "<?php echo get_option("user_login_error_message");?>", minimum: <?php echo get_option("user_login_text_length");?> } );
+}
+
+var user_email_active = "<?php echo get_option("user_email_active");?>";
+if( user_email_active == 'yes' && jQuery('#user_email').length) {
+var lv_user_email = new LiveValidation('user_email', { onlyOnBlur: true } );
+lv_user_email.add( Validate.Email, { failureMessage: "<?php echo get_option("user_email_error_message");?>", minimum: <?php echo get_option("user_email_text_length");?> } );
+}
+
+var pass1_active = "<?php echo get_option("pass1_active");?>";
+if( pass1_active == 'yes' && jQuery('#pass1').length) {
+var lv_pass1 = new LiveValidation('pass1', { onlyOnBlur: true } );
+lv_pass1.add( Validate.Length, { tooShortMessage: "<?php echo get_option("pass1_error_message");?>", minimum: <?php echo get_option("pass1_text_length");?> } );
+}
+
+var pass2_active = "<?php echo get_option("pass2_active");?>";
+if( pass2_active == 'yes' && jQuery('#pass2').length) {
+var lv_pass2 = new LiveValidation('pass2', { onlyOnBlur: true } );
+lv_pass2.add( Validate.Confirmation, { failureMessage: "<?php echo get_option("pass2_error_message");?>", match: 'pass1' } );
+}
+
+var reg_val_active = "<?php echo get_option("reg_val_active");?>";
+jQuery("input[name=reg_val]").attr('id','reg_val');
+if( reg_val_active == 'yes' && jQuery('input[name=reg_val]').length) {
+var lv_reg_val = new LiveValidation('reg_val', { onlyOnBlur: true } );
+lv_reg_val.add( Validate.Numericality, { notANumberMessage: "<?php echo get_option("reg_val_error_message");?>"} );
+}
 </script>
 <?php }
 
