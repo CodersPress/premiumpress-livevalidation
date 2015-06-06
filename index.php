@@ -59,25 +59,28 @@ echo '<div id="message" class="updated fade"><p><strong>Plugin setting saved.</s
 }
 ?>
 <div class="wrap">
-    <h2>Live Validation.</h2>
+    <h1>Premiumpress Live Validation</h1>
     <hr />
 <form method="post" action="options.php">
     <?php settings_fields("livevalidation-group");?>
     <?php do_settings_sections("livevalidation-group");?>
     <table class="widefat" style="width:800px;">
+
+    <h3>Section Registration:</h3>
+
         <thead style="background:#2EA2CC;color:#fff;">
             <tr>
-                <th style="color:#fff;"></th>
-                <th style="color:#fff;"></th>
-                <th style="color:#fff;"></th>
+                <th style="color:#fff;">Username text length</th>
+                <th style="color:#fff;">Valid</th>
+                <th style="color:#fff;">Error</th>
+                <th style="color:#fff;">Active</th>
             </tr>
         </thead>
 <tr>
-<td></td>
-<td> </td>
-<td>
-<input type="text" size="10" id="" name="" value="<?php echo get_option("");?>"/>
-</td>
+<td><input type="text" size="10" id="" name="" value="<?php echo get_option("");?>"/></td>
+<td><input type="text" size="10" id="" name="" value="<?php echo get_option("");?>"/></td>
+<td><input type="text" size="10" id="" name="" value="<?php echo get_option("");?>"/></td>
+<td><input type="text" size="10" id="" name="" value="<?php echo get_option("");?>"/></td>
         </tr>
   </table>
     <?php submit_button(); ?>
@@ -93,10 +96,17 @@ function jquery_livevalidation_js()
 }
 add_action( 'wp_enqueue_scripts', 'jquery_livevalidation_js' );
 
+function livevalidation_styles()
+{
+    wp_register_style( 'livevalidation-style', plugins_url( '/css/style.css', __FILE__ ) );
+    wp_enqueue_style( 'livevalidation-style' );
+}
+add_action( 'wp_enqueue_scripts', 'livevalidation_styles' );
 
-function pp_livevalidation() {	global $CORE;?>
+function pp_livevalidation() {	?>
 <script>
-
+var user_login = new LiveValidation('user_login', { validMessage: " ", onlyOnBlur: true } );
+user_login.add( Validate.Length, { wrongLengthMessage: "Do", is: 4 } );
 </script>
 <?php }
 
