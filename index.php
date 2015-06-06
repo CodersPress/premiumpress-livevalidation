@@ -3,8 +3,8 @@
 Plugin Name: Premiumpress live validation
 Plugin URI: http://coderspress.com/
 Description: Premiumpress live form validation as you type
-Version: 2015.0605
-Updated: 5th June 2015
+Version: 2015.0606
+Updated: 6th June 2015
 Author: sMarty 
 Author URI: http://coderspress.com
 WP_Requires: 3.8.1
@@ -40,6 +40,7 @@ function livevalidation_settings() {
 	register_setting( 'livevalidation-group', 'user_login_text_length' );
 	register_setting( 'livevalidation-group', 'user_login_error_message' );
 	register_setting( 'livevalidation-group', 'user_login_active' );
+	register_setting( 'livevalidation-group', 'user_login_space' );
 	register_setting( 'livevalidation-group', 'user_email_text_length' );
 	register_setting( 'livevalidation-group', 'user_email_error_message' );
 	register_setting( 'livevalidation-group', 'user_email_active' );
@@ -55,8 +56,9 @@ function livevalidation_defaults()
 {
     $option = array(
         'user_login_text_length' => '2',
-        'user_login_error_message' => "Please enter 2 or more characters!",
+        'user_login_error_message' => "Please enter 2 or more characters! No Spaces Allowed",
         'user_login_active' => 'no',
+        'user_login_space' => 'no',
         'user_email_text_length' => '6',
         'user_email_error_message' => "Please enter a valid email address!",
         'user_email_active' => 'no',
@@ -88,7 +90,7 @@ echo '<div id="message" class="updated fade"><p><strong>Plugin settings saved.</
 <form method="post" action="options.php">
     <?php settings_fields("livevalidation-group");?>
     <?php do_settings_sections("livevalidation-group");?>
-    <table class="widefat" style="width:800px;">
+    <table class="widefat" style="width:890px;">
 
     <h3>Section Registration and Login:</h3>
 
@@ -96,12 +98,19 @@ echo '<div id="message" class="updated fade"><p><strong>Plugin settings saved.</
             <tr>
                 <th style="color:#fff;">Username length</th>
                 <th style="color:#fff;">Error message</th>
-                <th style="color:#fff;">Active validation</th>
+                <th style="color:#fff;">Spaces Allowed</th>
+                <th style="color:#fff;">Validate</th>
             </tr>
         </thead>
 <tr>
 <td><input type="text" size="1" id="user_login_text_length" name="user_login_text_length" value="<?php echo get_option("user_login_text_length");?>"/></td>
 <td><input type="text" size="70" id="user_login_error_message" name="user_login_error_message" value="<?php echo get_option("user_login_error_message");?>"/></td>
+<td>
+        <select name="user_login_space" />
+        <option value="yes" <?php if ( get_option('user_login_space') == 'yes' ) echo 'selected="selected"'; ?>>Yes</option>
+        <option value="no" <?php if ( get_option('user_login_space') == 'no' ) echo 'selected="selected"'; ?>>No</option>
+         </select>
+</td>
 <td>
         <select name="user_login_active" />
         <option value="yes" <?php if ( get_option('user_login_active') == 'yes' ) echo 'selected="selected"'; ?>>Yes</option>
@@ -113,12 +122,14 @@ echo '<div id="message" class="updated fade"><p><strong>Plugin settings saved.</
             <tr>
                 <th style="color:#fff;">Email length</th>
                 <th style="color:#fff;">Error message</th>
-                <th style="color:#fff;">Active validation</th>
+                <th style="color:#fff;"></th>
+                <th style="color:#fff;">Validate</th>
             </tr>
         </thead>
 <tr>
 <td><input type="text" size="1" id="user_email_text_length" name="user_email_text_length" value="<?php echo get_option("user_email_text_length");?>"/></td>
 <td><input type="text" size="70" id="user_email_error_message" name="user_email_error_message" value="<?php echo get_option("user_email_error_message");?>"/></td>
+<td></td>
 <td>
         <select name="user_email_active" />
         <option value="yes" <?php if ( get_option('user_email_active') == 'yes' ) echo 'selected="selected"'; ?>>Yes</option>
@@ -131,12 +142,14 @@ echo '<div id="message" class="updated fade"><p><strong>Plugin settings saved.</
             <tr>
                 <th style="color:#fff;">Password length</th>
                 <th style="color:#fff;">Error message</th>
-                <th style="color:#fff;">Active validation</th>
+                <th style="color:#fff;"></th>
+                <th style="color:#fff;">Validate</th>
             </tr>
         </thead>
 <tr>
 <td><input type="text" size="1" id="pass1_text_length" name="pass1_text_length" value="<?php echo get_option("pass1_text_length");?>"/></td>
 <td><input type="text" size="70" id="pass1_error_message" name="pass1_error_message" value="<?php echo get_option("pass1_error_message");?>"/></td>
+<td></td>
 <td>
         <select name="pass1_active" />
         <option value="yes" <?php if ( get_option('pass1_active') == 'yes' ) echo 'selected="selected"'; ?>>Yes</option>
@@ -149,12 +162,14 @@ echo '<div id="message" class="updated fade"><p><strong>Plugin settings saved.</
             <tr>
                 <th style="color:#fff;">Password confirm</th>
                 <th style="color:#fff;">Error message</th>
-                <th style="color:#fff;">Active validation</th>
+                <th style="color:#fff;"></th>
+                <th style="color:#fff;">Validate</th>
             </tr>
         </thead>
 <tr>
-<td>Password Compare:</td>
+<td><b>Password Compare</b>:</td>
 <td><input type="text" size="70" id="pass2_error_message" name="pass2_error_message" value="<?php echo get_option("pass2_error_message");?>"/></td>
+<td></td>
 <td>
         <select name="pass2_active" />
         <option value="yes" <?php if ( get_option('pass2_active') == 'yes' ) echo 'selected="selected"'; ?>>Yes</option>
@@ -167,12 +182,14 @@ echo '<div id="message" class="updated fade"><p><strong>Plugin settings saved.</
             <tr>
                 <th style="color:#fff;">Security</th>
                 <th style="color:#fff;">Error message</th>
-                <th style="color:#fff;">Active validation</th>
+                <th style="color:#fff;"></th>
+                <th style="color:#fff;">Validate</th>
             </tr>
         </thead>
 <tr>
-<td>Security Question:</td>
+<td><b>Security Question</b>:</td>
 <td><input type="text" size="70" id="reg_val_error_message" name="reg_val_error_message" value="<?php echo get_option("reg_val_error_message");?>"/></td>
+<td></td>
 <td>
         <select name="reg_val_active" />
         <option value="yes" <?php if ( get_option('reg_val_active') == 'yes' ) echo 'selected="selected"'; ?>>Yes</option>
@@ -207,6 +224,7 @@ var user_login_active = "<?php echo get_option("user_login_active");?>";
 if( user_login_active == 'yes' && jQuery('#user_login').length) {
 var lv_user_login = new LiveValidation('user_login', { onlyOnBlur: true } );
 lv_user_login.add( Validate.Length, { tooShortMessage: "<?php echo get_option("user_login_error_message");?>", minimum: <?php echo get_option("user_login_text_length");?> } );
+lv_user_login.add( Validate.Exclusion, { failureMessage: "<?php echo get_option("user_login_error_message");?>", within: [' '], partialMatch: true } );
 }
 
 var user_email_active = "<?php echo get_option("user_email_active");?>";
