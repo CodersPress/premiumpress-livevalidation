@@ -246,7 +246,10 @@ var user_login_active = "<?php echo get_option("user_login_active");?>";
 if( user_login_active == 'yes' && jQuery('#user_login').length) {
 var lv_user_login = new LiveValidation('user_login', { onlyOnBlur: true } );
 lv_user_login.add( Validate.Length, { tooShortMessage: "<?php echo get_option("user_login_error_message");?>", minimum: <?php echo get_option("user_login_text_length");?> } );
+var user_login_space = "<?php echo get_option("user_login_space");?>";
+if( user_login_space == 'yes' ) {
 lv_user_login.add( Validate.Exclusion, { failureMessage: "<?php echo get_option("user_login_error_message");?>", within: [' '], partialMatch: true } );
+	}
 }
 
 var user_email_active = "<?php echo get_option("user_email_active");?>";
