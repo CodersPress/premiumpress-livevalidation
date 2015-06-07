@@ -84,6 +84,28 @@ if ($_REQUEST['settings-updated']=='true') {
 echo '<div id="message" class="updated fade"><p><strong>Plugin settings saved.</strong></p></div>';
 }
 ?>
+<style>
+/* The CSS */
+select {
+    padding:3px;
+    margin: 0;
+    -webkit-border-radius:4px;
+    -moz-border-radius:4px;
+    border-radius:4px;
+    -webkit-box-shadow: 0 3px 0 #ccc, 0 -1px #fff inset;
+    -moz-box-shadow: 0 3px 0 #ccc, 0 -1px #fff inset;
+    box-shadow: 0 3px 0 #ccc, 0 -1px #fff inset;
+    background: #f8f8f8;
+    color:#888;
+    border:none;
+    outline:none;
+    display: inline-block;
+    -webkit-appearance:none;
+    -moz-appearance:none;
+    appearance:none;
+    cursor:pointer;
+}
+</style>
 <div class="wrap">
     <h1>Premiumpress Live Validation</h1>
     <hr />
